@@ -14,7 +14,7 @@ for data in ercot_data:
         # print('supply')
         df = pd.DataFrame(r.json()['data'])
         df['forecast_text'] = df['forecast'].apply(lambda x: "Current" if int(x) == 0 else "Forecast")
-        df['timestamp_hour'] = pd.to_datetime(df['timestamp']).dt.hour
+        df['timestamp_hour'] = pd.to_datetime(df['timestamp']).dt.strftime('%H:%M')
         
     else:
         df = pd.DataFrame(r.json()['currentDay']['data'])
