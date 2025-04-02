@@ -6,7 +6,7 @@ supply_url = 'https://www.ercot.com/api/1/services/read/dashboards/supply-demand
 system_demand_url = 'https://www.ercot.com/api/1/services/read/dashboards/system-wide-demand.json'
 
 ercot_data = [supply_url, system_demand_url]
-
+os.makedirs('data/raw/environment', exist_ok=True)
 for data in ercot_data:
     r = requests.get(data)
     fname = data.split('/')[-1].split('.')[0]
