@@ -13,6 +13,9 @@ for data in ercot_data:
     if 'supply' in fname:
         # print('supply')
         df = pd.DataFrame(r.json()['data'])
+        df['forecast_text'] = df['forecast'].apply(lambda x: "Forecast|Current" if x in [0, 1] else x)
+        df['timestamp_hour'] = pd.to_datetime(df['timestamp']).dt.hour
+        
     else:
         df = pd.DataFrame(r.json()['currentDay']['data'])
     
