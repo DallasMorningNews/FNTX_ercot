@@ -1,0 +1,47 @@
+name: Scrape ERCOT
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+    
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/pip
+          env/  # Cache the virtual environment directory
+        key: ${{ runner.os }}-python-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-python-
+    
+    - name: Create virtual environment
+      run: python -m venv env
+
+    - name: Activate virtual environment
+      run: source env/bin/activate
+
+    - name: Install requirements
+      run: pip install -r requirements.txt
+
+    - name: Run scraper
+      run: python3 parse_ERCOT.py
+
+    - name: Add and commit	
+      run: |-	
+        git add .	
+        git config user.name "Automated"	
+        git config user.email "actions@users.noreply.github.com"	
+        git commit -m "Latest data" 	
+    - name: Push	
+      run: git push
